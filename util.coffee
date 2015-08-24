@@ -1,5 +1,6 @@
 config = require './config'
 rest = require 'restler'
+fs = require 'fs'
 exports.short_str = (str) ->
   if (str && str.length > 128)
     return str.slice(0, 128) + "..."
