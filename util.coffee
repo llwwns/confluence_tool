@@ -1,6 +1,28 @@
 config = require './config'
 rest = require 'restler'
 fs = require 'fs'
+exports.remove_comment = (str) ->
+  lines = str.split /\n|\r\n/
+  res = ""
+  is_comment = false
+  for line in lines
+    if is_comment
+      if line.match /--##/
+        is_comment = false
+        if line.match /--##.+/
+          res += (line.match /--##(.+)/)[1] + "\n"
+    else
+      if line.match /(.*)##--.*--##(.*)/
+          match = line.match /(.*)##--.*--##(.*)/
+          res += match[1] + match[2] + "\n"
+      else if line.match /##--/
+        is_comment = true
+        if line.match /(.+)##--/
+          res += (line.match /(.+)##--/)[1] + "\n"
+      else
+        res += line + "\n"
+  res
+    
 exports.short_str = (str) ->
   if (str && str.length > 128)
     return str.slice(0, 128) + "..."

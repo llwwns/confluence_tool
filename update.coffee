@@ -11,7 +11,8 @@ wait = (callback) ->
 data = JSON.parse fs.readFileSync 'content.json', 'utf8'
 if !data.id
   fs.readFile data.file, 'utf8',  (err,wiki) ->
-    wiki = wiki.trim()
+    wiki = util.remove_comment wiki.trim()
+    
     console.log util.short_str wiki
     console.log "create page"
     wait () ->
@@ -32,7 +33,7 @@ else
   util.get_page data.id, (page)->
     ver = page.version.number
     fs.readFile data.file, 'utf8',  (err,wiki) ->
-      wiki = wiki.trim()
+      wiki = util.remove_comment wiki.trim()
       console.log util.short_str wiki
       console.log "update page"
       wait () ->
