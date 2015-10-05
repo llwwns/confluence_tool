@@ -25,7 +25,7 @@ if !data.id
           data.id = res.id
           delete data.body
           fs.writeFileSync 'content.json', JSON.stringify data, null, 4
-          if res.body.storage.value
+          if res.body?.storage?.value
             res.body.storage.value = util.short_str res.body.storage.value
           console.log res
           process.exit 0
