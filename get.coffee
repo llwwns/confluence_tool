@@ -7,6 +7,6 @@ if data.id
     if page.body.storage.value
       page.body.storage.value = util.short_str page.body.storage.value
       if page._links && (process.argv.some (e) -> e == '-u')
-            console.log page._links.base + page._links.webui
-            process.exit 0
+        console.log page._links.base + page._links.webui
+        process.exit 0
       console.log page
