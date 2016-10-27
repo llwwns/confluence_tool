@@ -1,5 +1,7 @@
 {
   "dependencies": {
-    "restler": "^3.3.0"
+    "co": "^4.6.0",
+    "fs-promise": "^0.5.0",
+    "restler": "^3.4.0"
   }
 }
