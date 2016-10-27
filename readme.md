@@ -2,15 +2,13 @@
 
 1. Install node.js
 
-2. Install coffeescript by `npm install -g coffee-script`
-
-3. Cd into the directory and install modules by `npm install`
+2. Cd into the directory and install modules by `npm install`
 
 # How to use
 
 ## Create configuation
 
-Copy the config\_sample.coffee to config.coffee and fix configuations.
+Copy the config\_sample. to config.js and fix configuations.
 
 ## Create a new page / Update page:
 
@@ -38,16 +36,16 @@ Sample:
 }
 ```
 
-If the id is empty, update.coffee will create a new page and automatically fill the id.
+If the id is empty, update.js will create a new page and automatically fill the id.
 
-If id is privided, update.coffee will update the confluence page.
+If id is privided, update.js will update the confluence page.
 
 Usege:
 
 Cd into the page's directory and run:
 
 ```
-coffee path_to_script/update.coffee
+node path_to_script/update.js
 ```
 
 ## Upload attachments
@@ -55,7 +53,7 @@ coffee path_to_script/update.coffee
 Make sure this content.json with the id filled.
 
 ```
-coffee path_to_script/upload.coffee file_name ...
+node path_to_script/upload.js file_name ...
 ```
 
 ## Get page infomation
@@ -65,13 +63,13 @@ Make sure this content.json with the id filled.
 Get all infomation:
 
 ```
-coffee path_to_script/get.coffee
+node path_to_script/get.js
 ```
 
 Get url:
 
 ```
-coffee path_to_script/get.coffee -u
+node path_to_script/get.js -u
 ```
 
 # For cygwin user
