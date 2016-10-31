@@ -36,6 +36,9 @@ co(function*() {
             res.body.storage.value = util.short_str(res.body.storage.value);
         }
         console.log(res);
+        data.id = res.id;
+        delete data.body;
+        yield fsp.writeFile('content.json', JSON.stringify(data, null, 4));
         process.exit(0);
     } else {
         const page = yield util.get_page(data.id);
