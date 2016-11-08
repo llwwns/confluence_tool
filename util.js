@@ -1,6 +1,28 @@
 const config = require('./config');
-const rest = require('restler');
 const fs = require('fs');
+let request = require("request");
+const bluebird = require('bluebird');
+request = request.defaults({
+    auth: {
+        username: config.username,
+        password: config.password
+    },
+    json: true
+});
+bluebird.promisifyAll(request, {promisifier: (f) => {
+    return function() {
+        let args = [].slice.call(arguments);
+        return new bluebird((resolve, reject) => {
+            args.push((err, res, body) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(body);
+            });
+            f.apply(this, args);
+        });
+    };
+}});
 
 exports.remove_comment = (str) => {
     const lines = str.split(/\n|\r\n/);
@@ -46,35 +68,35 @@ exports.short_str = (str) => {
     return str;
 };
 
-exports.get_page = (id) => rest_promise(rest.get.bind(null, config.root + '/rest/api/content/' + id), {
-    query: {
+exports.get_page = (id) => request.getAsync(`${config.root}/rest/api/content/${id}`, {
+    qs: {
         expand: 'body.storage,version,ancestors'
     }
 });
 
-exports.create_page = (data) => rest_promise(rest.postJson.bind(null, config.root + '/rest/api/content/', data));
+exports.create_page = (data) => request.postAsync(`${config.root}/rest/api/content`, {body: data});
 
-exports.update_page = (id, data) => rest_promise(rest.putJson.bind(null, config.root + '/rest/api/content/' + id, data));
+exports.update_page = (id, data) => request.putAsync(`${config.root}/rest/api/content/${id}`, {body: data});
 
-exports.convert_wiki = (text) => rest_promise(rest.postJson.bind(null, config.root + '/rest/api/contentbody/convert/storage', {
-    value: text,
-    representation: "wiki"
-}));
+exports.convert_wiki = (text) => request.postAsync(`${config.root}/rest/api/contentbody/convert/storage`, {
+    body: {
+        value: text,
+        representation: "wiki"
+    }
+});
 
-exports.convert_view = (text) => rest_promise(rest.postJson.bind(null, config.root + '/rest/api/contentbody/convert/view', {
-    value: text,
-    representation: "storage"
-}));
+exports.convert_view = (text) => request.postAsync(`${config.root}/rest/api/contentbody/convert/view`, {
+    body: {
+        value: text,
+        representation: "storage"
+    }
+});
 
-exports.upload_attachment = (id, file) => {
-    const size = fs.statSync(file).size;
-    return rest_promise(rest.post.bind(null, config.root + '/rest/api/content/' + id + '/child/attachment'), {
-        multipart: true,
-        data: {
-            file: rest.file(file, null, size)
-        },
-        headers: {
-            'X-Atlassian-Token': 'no-check'
-        }
-    });
-};
+exports.upload_attachment = (id, file) => request.postAsync(`${config.root}/rest/api/content/${id}/child/attachment`, {
+    formData: {
+        file: fs.createReadStream(file)
+    },
+    headers: {
+        'X-Atlassian-Token': 'no-check'
+    }
+});

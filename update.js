@@ -1,5 +1,4 @@
 const fs = require('fs');
-const fsp = require('fs-promise');
 const util = require('./util');
 const co = require('co');
 
@@ -15,9 +14,9 @@ const wait = () => new Promise((resolve, reject) => {
 });
 
 co(function*() {
-    let data = JSON.parse(yield fsp.readFile('content.json', 'utf8'));
+    let data = JSON.parse(fs.readFileSync('content.json', 'utf8'));
     if (!data.id) {
-        let wiki = yield fsp.readFile(data.file, 'utf8')
+        let wiki = fs.readFileSync(data.file, 'utf8')
         wiki = util.remove_comment(wiki.trim());
         console.log(util.short_str(wiki));
         console.log("create page");
@@ -38,12 +37,12 @@ co(function*() {
         console.log(res);
         data.id = res.id;
         delete data.body;
-        yield fsp.writeFile('content.json', JSON.stringify(data, null, 4));
+        fs.writeFileSync('content.json', JSON.stringify(data, null, 4));
         process.exit(0);
     } else {
         const page = yield util.get_page(data.id);
         const ver = +page.version.number;
-        let wiki = yield fsp.readFile(data.file, 'utf8');
+        let wiki = fs.readFileSync(data.file, 'utf8');
         wiki = util.remove_comment(wiki.trim());
         console.log(util.short_str(wiki));
         console.log("update page");
@@ -59,7 +58,6 @@ co(function*() {
         data.version = {
             number: ver + 1
         };
-        console.log(data);
         const res = yield util.update_page(data.id, data);
         if (res.body && res.body.storage && res.body.storage.value) {
             res.body.storage.value = util.short_str(res.body.storage.value);

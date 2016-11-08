@@ -13,7 +13,7 @@ if (data.id) {
             }
             return console.log(page);
         } else {
-            throw page;
+            throw ["ERROR", page];
         }
     }).catch(console.log);
 }

@@ -8,6 +8,6 @@ if (process.argv[2]) {
         process.argv.slice(2).forEach(function(e) {
             tasks.push(util.upload_attachment(data.id, e));
         });
-        Promise.all(tasks).then(console.log).catch(console.log);
+        Promise.all(tasks).then((res) => console.log(res)).catch(console.log);
     }
 }
